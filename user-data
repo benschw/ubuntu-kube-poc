@@ -1,0 +1,93 @@
+#cloud-config
+
+coreos:
+  etcd:
+    # generate a new token for each unique cluster from https://discovery.etcd.io/new
+    # WARNING: replace each time you 'vagrant destroy'
+    #discovery: https://discovery.etcd.io/<token>
+    addr: $public_ipv4:4001
+    peer-addr: $public_ipv4:7001
+  fleet:
+    public-ip: $public_ipv4
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: docker-tcp.socket
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Docker Socket for the API
+
+        [Socket]
+        ListenStream=2375
+        Service=docker.service
+        BindIPv6Only=both
+
+        [Install]
+        WantedBy=sockets.target
+    - name: kubernetes-apiserver.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Kubernetes API Server
+
+        [Service]
+        ExecStart=/opt/kubernetes/bin/apiserver \
+          --address=127.0.0.1 \
+          --port=8080 \
+          --etcd_servers=http://127.0.0.1:4001 \
+          --machines=127.0.0.1 \
+          --logtostderr=true
+
+        [Install]
+        WantedBy=multi-user.target
+    - name: kubernetes-controller-manager.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Kubernetes Controller Manager
+
+        [Service]
+        ExecStart=/opt/kubernetes/bin/controller-manager \
+          --etcd_servers=http://127.0.0.1:4001 \
+          --master=127.0.0.1:8080 \
+          --logtostderr=true
+
+        [Install]
+        WantedBy=multi-user.target
+    - name: kubernetes-kubelet.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Kubernetes Kubelet
+
+        [Service]
+        ExecStart=/opt/kubernetes/bin/kubelet \
+          --etcd_servers=http://127.0.0.1:4001 \
+          --hostname_override=127.0.0.1 \
+          --address=127.0.0.1 \
+          --port=10250 \
+          --logtostderr=true
+
+        [Install]
+        WantedBy=multi-user.target
+    - name: kubernetes-proxy.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Kubernetes Proxy
+
+        [Service]
+        ExecStart=/opt/kubernetes/bin/proxy \
+          --etcd_servers=http://127.0.0.1:4001 \
+          --logtostderr=true
+
+        [Install]
+        WantedBy=multi-user.target
