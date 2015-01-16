@@ -36,7 +36,7 @@ coreos:
         Description=Kubernetes API Server
 
         [Service]
-        ExecStart=/opt/kubernetes/bin/apiserver \
+        ExecStart=/opt/bin/kube-apiserver \
           --address=127.0.0.1 \
           --port=8080 \
           --etcd_servers=http://127.0.0.1:4001 \
@@ -53,7 +53,7 @@ coreos:
         Description=Kubernetes Controller Manager
 
         [Service]
-        ExecStart=/opt/kubernetes/bin/controller-manager \
+        ExecStart=/opt/bin/kube-controller-manager \
           --etcd_servers=http://127.0.0.1:4001 \
           --master=127.0.0.1:8080 \
           --logtostderr=true
@@ -68,7 +68,7 @@ coreos:
         Description=Kubernetes Kubelet
 
         [Service]
-        ExecStart=/opt/kubernetes/bin/kubelet \
+        ExecStart=/opt/bin/kubelet \
           --etcd_servers=http://127.0.0.1:4001 \
           --hostname_override=127.0.0.1 \
           --address=127.0.0.1 \
@@ -85,7 +85,7 @@ coreos:
         Description=Kubernetes Proxy
 
         [Service]
-        ExecStart=/opt/kubernetes/bin/proxy \
+        ExecStart=/opt/bin/kube-proxy \
           --etcd_servers=http://127.0.0.1:4001 \
           --logtostderr=true
 

@@ -38,8 +38,8 @@ Vagrant.configure("2") do |config|
     # in CoreOS, so tell Vagrant that so it can be smarter.
     v.check_guest_additions = false
     v.functional_vboxsf     = false
-    v.customize ["modifyvm", :id, "--memory", "512"]
-    v.customize ["modifyvm", :id, "--cpus", "2"]
+    v.customize ["modifyvm", :id, "--memory", "2048"]
+    v.customize ["modifyvm", :id, "--cpus", "4"]
   end
 
   # plugin conflict

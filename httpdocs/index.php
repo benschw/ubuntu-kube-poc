@@ -1,3 +1,3 @@
 <?php
-echo $_SERVER['SERVER_ADDR'] . "<br /><br />";
-echo phpinfo();
+echo "<h1>hello world</h1>";
+echo $_SERVER['SERVER_ADDR'];
