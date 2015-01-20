@@ -1,0 +1,27 @@
+{
+	"id": "demoController",
+	"kind": "ReplicationController",
+	"apiVersion": "v1beta1",
+	"desiredState": {
+		"replicas": 1,
+		"replicaSelector": {"name": "php"},
+		"podTemplate": {
+			"desiredState": {
+				"manifest": {
+			"apiVersion": "v1beta1",
+			"id": "demoController",
+			"containers": [{
+				"name": "lamp-test",
+				"image": "benschw/lamp-test",
+				"ports": [{
+					"containerPort": 80,
+					"hostPort": 9000 
+				}]
+			}]
+		}
+			},
+			"labels": {"name": "php"}
+		}
+	},
+	"labels": {"name": "php"}
+}
