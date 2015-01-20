@@ -26,12 +26,12 @@
 					"volumes": [{
 						"name": "nginx-sites-enabled",
 						"source": {
-							"hostDir": "/vagrant/sites"
+							"hostDir": {"path": "/vagrant/sites"}
 						}
 					},{
 						"name": "nginx-logs",
 						"source": {
-							"hostDir": "/vagrant/logs/nginx"
+							"hostDir": {"path": "/vagrant/logs/nginx"}
 						}
 					}]
 				}
