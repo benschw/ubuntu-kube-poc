@@ -12,7 +12,7 @@
 	kubecfg -c /vagrant/demo/demo-service.json create /services
 
 
-	kubecfg -c /vagrant/nginx/site-mapper/sitemapper.json create /pods
+	kubecfg -c /vagrant/nginx/site-mapper/sitemapper-controller.json create /replicationControllers
 
 
 	for kind in pods replicationControllers services; do echo ${kind}:; /opt/bin/kubecfg list ${kind}; done

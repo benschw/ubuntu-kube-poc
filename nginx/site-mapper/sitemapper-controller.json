@@ -14,24 +14,24 @@
 					"containers": [{
 						"name": "sitemapper",
 						"image": "benschw/sitemapper",
-						"ports": []
+						"ports": [],
+						"volumeMounts": [{
+							"name": "nginx-sites-config",
+							"mountPath": "/opt/sites"
+						}]
 					}],
-					"volumeMounts": [{
+					"volumes": [{
 						"name": "nginx-sites-config",
-						"mountPath": "/opt/sites"
+						"source": {
+							"hostDir": {"path": "/vagrant/tmp"}
+						}
 					}]
 				}
 			},
 			"labels": {
 				"name": "sitemapper",
 				"uses": "demo"
-			},
-			"volumes": [{
-				"name": "nginx-sites-config",
-				"source": {
-					"hostDir": {"path": "/vagrant/tmp"}
-				}
-			}]
+			}
 		}
 	},
 	"labels": {"name": "sitemapper"}
