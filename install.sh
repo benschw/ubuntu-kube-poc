@@ -1,14 +1,14 @@
 #!/bin/bash
 
 
-mkdir -p /opt/bin
 
+mkdir -p /opt
 mkdir -p /vagrant/logs/nginx
 
 
-# wget -q https://dl.dropboxusercontent.com/u/1266213/kube-bin.tar.gz -O /opt/kube-bin.tar.gz
-# tar -xvf /opt/kube-bin.tar.gz -C /opt/
-# mv /opt/kube-bin/* /opt/bin/
+wget -q https://dl.dropboxusercontent.com/u/1266213/kube-bin.tar.gz -O /opt/kube-bin.tar.gz
+tar -xvf /opt/kube-bin.tar.gz -C /opt/
+mv /opt/kube-bin /opt/bin
 
 
 # wget -q https://github.com/GoogleCloudPlatform/kubernetes/releases/download/v0.8.1/kubernetes.tar.gz -O /opt/kubernetes.tar.gz

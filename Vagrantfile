@@ -12,24 +12,23 @@ Vagrant.configure("2") do |config|
   # always use Vagrants insecure key
   config.ssh.insert_key = false
 
-  config.vm.box = "coreos-alpha"
-  config.vm.box_version = ">= 308.0.1"
-  config.vm.box_url = "http://alpha.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json"
+  config.vm.box = "ubuntu-trusty"
+  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/trusty-server-cloudimg-amd64-juju-vagrant-disk1.box"
 
-  # coreos ====================================================================
-  config.vm.define "coreos" do |coreos|
-    coreos.vm.hostname = "coreos.local"
-    coreos.vm.network "private_network", ip: "172.20.20.10"
+  # kube ====================================================================
+  config.vm.define "kube" do |kube|
+    kube.vm.hostname = "kube.local"
+    kube.vm.network "private_network", ip: "172.20.20.10"
 
 
-    coreos.vm.provision :shell, :path => "./install.sh"
+    kube.vm.provision :shell, :path => "./install.sh"
 
     config.vm.synced_folder ".", "/vagrant", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
 
-    if File.exist?(CLOUD_CONFIG_PATH)
-      coreos.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
-      coreos.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
-    end
+    # if File.exist?(CLOUD_CONFIG_PATH)
+    #   kube.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
+    #   coreos.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/kube-vagrant/", :privileged => true
+    # end
 
   end
 
