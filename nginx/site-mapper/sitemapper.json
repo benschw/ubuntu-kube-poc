@@ -1,0 +1,39 @@
+
+{
+	"id": "sitemapper",
+	"kind": "ReplicationController",
+	"apiVersion": "v1beta1",
+	"desiredState": {
+		"replicas": 1,
+		"replicaSelector": {"name": "sitemapper"},
+		"podTemplate": {
+			"desiredState": {
+				"manifest": {
+					"id": "sitemapper",
+					"apiVersion": "v1beta1",
+					"containers": [{
+						"name": "sitemapper",
+						"image": "benschw/sitemapper",
+						"ports": []
+					}],
+					"volumeMounts": [{
+						"name": "nginx-sites-config",
+						"mountPath": "/opt/sites"
+					}]
+				}
+			},
+			"labels": {
+				"name": "sitemapper",
+				"uses": "demo"
+			},
+			"volumes": [{
+				"name": "nginx-sites-config",
+				"source": {
+					"hostDir": {"path": "/vagrant/tmp"}
+				}
+			}]
+		}
+	},
+	"labels": {"name": "sitemapper"}
+}
+

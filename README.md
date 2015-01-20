@@ -9,9 +9,19 @@
 
 	# benschw/lamp-test
 	kubecfg -c /vagrant/demo/demo-controller.json create /replicationControllers
+	kubecfg -c /vagrant/demo/demo-service.json create /services
 
-	docker run -d -p 80:80 -v /vagrant/sites:/etc/nginx/sites-enabled -v /vagrant/logs/nginx:/var/log/nginx dockerfile/nginx
 
+	kubecfg -c /vagrant/nginx/site-mapper/sitemapper.json create /pods
 
 
 	for kind in pods replicationControllers services; do echo ${kind}:; /opt/bin/kubecfg list ${kind}; done
+
+
+
+
+## misc
+	docker run -d -p 80:80 -v /vagrant/sites:/etc/nginx/sites-enabled -v /vagrant/logs/nginx:/var/log/nginx dockerfile/nginx
+
+
+	docker run -t -d -v /vagrant/tmp/:/opt/sites/ benschw/sitemapper

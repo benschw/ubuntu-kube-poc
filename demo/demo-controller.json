@@ -15,13 +15,15 @@
 				"image": "benschw/lamp-test",
 				"ports": [{
 					"containerPort": 80,
-					"hostPort": 9000 
+					"hostPort": 8000 
 				}]
 			}]
 		}
 			},
-			"labels": {"name": "php"}
+			"labels": {
+				"name": "demo"
+			}
 		}
 	},
-	"labels": {"name": "php"}
+	"labels": {"name": "demo"}
 }

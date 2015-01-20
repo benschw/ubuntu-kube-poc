@@ -26,3 +26,6 @@ cp /vagrant/ubuntu-init/default_scripts/* /etc/default/
 
 
 mkdir -p /vagrant/logs/nginx
+
+
+echo PATH="/opt/bin:$PATH" >> /home/vagrant/.bashrc
