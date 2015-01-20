@@ -5,14 +5,13 @@
 
 	# dockerfile/nginx
 	kubecfg -c /vagrant/nginx/nginx-controller.json create /replicationControllers
-	kubecfg -c /vagrant/nginx/nginx-service.json create /services
 
 	# benschw/lamp-test
 	kubecfg -c /vagrant/demo/demo-controller.json create /replicationControllers
 	kubecfg -c /vagrant/demo/demo-service.json create /services
 
 
-	kubecfg -c /vagrant/nginx/site-mapper/sitemapper-controller.json create /replicationControllers
+	kubecfg -c /vagrant/nginx-site-mapper/sitemapper-controller.json create /replicationControllers
 
 
 	for kind in pods replicationControllers services; do echo ${kind}:; /opt/bin/kubecfg list ${kind}; done
@@ -25,3 +24,6 @@
 
 
 	docker run -t -d -v /vagrant/tmp/:/opt/sites/ benschw/sitemapper
+
+
+	docker kill -s HUP nginx

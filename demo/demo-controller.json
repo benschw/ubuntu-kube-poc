@@ -4,7 +4,7 @@
 	"apiVersion": "v1beta1",
 	"desiredState": {
 		"replicas": 1,
-		"replicaSelector": {"name": "php"},
+		"replicaSelector": {"name": "demo"},
 		"podTemplate": {
 			"desiredState": {
 				"manifest": {

@@ -25,6 +25,8 @@ cp /vagrant/ubuntu-init/initd_scripts/* /etc/init.d/
 cp /vagrant/ubuntu-init/default_scripts/* /etc/default/
 
 
+service etcd start
+
 mkdir -p /vagrant/logs/nginx
 
 
