@@ -28,6 +28,6 @@ cp /vagrant/ubuntu-init/default_scripts/* /etc/default/
 service etcd start
 
 mkdir -p /vagrant/logs/nginx
-
+mkdir -p /vagrant/sites
 
 echo PATH="/opt/bin:$PATH" >> /home/vagrant/.bashrc

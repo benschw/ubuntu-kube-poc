@@ -32,3 +32,5 @@
 
 	# get containerId of container(s) with kubernetes name "nginx"
 	kubecfg -json list pods | python ./reload.py nginx | xargs sudo docker kill -s HUP
+
+	vagrant ssh -c "/opt/bin/kubecfg -json list pods | python /vagrant/bin/filters/container-id-by-name.py nginx | xargs sudo docker kill -s HUP"

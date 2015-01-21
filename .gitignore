@@ -1,3 +1,5 @@
 logs
 .vagrant
 kubernetes-linux-amd64
+nginx-site-mapper/nginx-site-mapper
+sites

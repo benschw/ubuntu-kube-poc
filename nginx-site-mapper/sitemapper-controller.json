@@ -23,7 +23,7 @@
 					"volumes": [{
 						"name": "nginx-sites-config",
 						"source": {
-							"hostDir": {"path": "/vagrant/tmp"}
+							"hostDir": {"path": "/vagrant/sites"}
 						}
 					}]
 				}
