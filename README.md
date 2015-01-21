@@ -4,17 +4,18 @@
 - (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-kubernetes-on-top-of-a-coreos-cluster)
 
 	# dockerfile/nginx
-	kubecfg -c /vagrant/nginx/nginx-controller.json create /replicationControllers
+	kubectl create -f /vagrant/nginx/nginx-controller.json
 
 	# benschw/lamp-test
-	kubecfg -c /vagrant/demo/demo-controller.json create /replicationControllers
-	kubecfg -c /vagrant/demo/demo-service.json create /services
+	kubectl create -f /vagrant/demo/demo-controller.json
+	kubectl create -f /vagrant/demo/demo-service.json
+
+	# benschw/sitemapper
+	kubectl create -f /vagrant/nginx-site-mapper/sitemapper-controller.json
 
 
-	kubecfg -c /vagrant/nginx-site-mapper/sitemapper-controller.json create /replicationControllers
 
-
-	for kind in pods replicationControllers services; do echo ${kind}:; /opt/bin/kubecfg list ${kind}; done
+	for kind in pods replicationControllers services; do echo; echo ${kind}:; kubectl get ${kind}; done
 
 
 
@@ -25,11 +26,8 @@
 
 	docker run -t -d -v /vagrant/tmp/:/opt/sites/ benschw/sitemapper
 
-
-	docker kill -s HUP nginx
-
-	kubecfg -json list pods | python -m tool.json
-
 	./bin/kube.sh reload-nginx
+	./bin/kube.sh reload-sitemapper
 
 
+	docker pull benschw/lamp-test && docker pull dockerfile/nginx && docker pull benschw/sitemapper
