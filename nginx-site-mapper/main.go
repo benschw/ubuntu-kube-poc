@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -67,51 +68,102 @@ func getMappers() (map[string]*Mapping, error) {
 	return mappings, nil
 }
 
-func main() {
-	var outputPath = flag.String("o", "/opt/sites/", "output path")
-	var tplPath = flag.String("t", "/opt/site.tpl", "tpl path")
+func hasModifications(key string, mapping *Mapping, index map[string]*Mapping) bool {
+	if _, ok := index[key]; ok {
+		if index[key].Ip == mapping.Ip && index[key].Port == mapping.Port {
+			return false
+		}
+	}
+	return true
+}
 
-	flag.Parse()
+func getExistingNames(path string) ([]string, error) {
+	names := make([]string, 0, 20)
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return names, err
+	}
+	for _, f := range files {
+		parts := strings.Split(f.Name(), ".")
+
+		names = append(names, parts[0])
+
+	}
+	return names, nil
+}
+
+func synchronize(index map[string]*Mapping, outputPath string, tplPath string) error {
+	names, err := getExistingNames(outputPath)
+	if err != nil {
+		return err
+	}
+
+	// remove from index if missing on fs
+	for name, _ := range index {
+		if !stringInSlice(name, names) {
+			log.Println("config missing on fs: " + name)
+			delete(index, name)
+		}
+	}
+
+	mappings, err := getMappers()
+	if err != nil {
+		return err
+	}
+
+	// update on fs if value has changed
+	for key, mapping := range mappings {
+		if hasModifications(key, mapping, index) {
+
+			log.Println("updating config: " + key)
+			if err := writeSiteConfig(mapping, outputPath, tplPath); err != nil {
+				log.Println(err)
+			}
+			index[key] = mapping
+		}
+	}
+
+	// remove from fs if missing in index
+	for _, name := range names {
+		if _, ok := index[name]; !ok {
+			log.Println("deleting config: " + name)
+			if err := deleteConfig(name, outputPath); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func main() {
 	// os.Setenv("DEMO_SERVICE_HOST", "192.12.12.12")
 	// os.Setenv("DEMO_SERVICE_PORT", "8080")
 	// os.Setenv("BAR_SERVICE_HOST", "192.12.12.12")
 	// os.Setenv("BAR_SERVICE_PORT", "8080")
+
+	var outputPath = flag.String("o", "/opt/sites/", "output path")
+	var tplPath = flag.String("t", "/opt/site.tpl", "tpl path")
+
+	flag.Parse()
+
+	// Make Data Dir
+	if err := os.MkdirAll(*outputPath, 0744); err != nil {
+		log.Fatalf("Unable to create path: %v", err)
+	}
+
 	log.Println("starting")
 
 	index := make(map[string]*Mapping)
 
 	for true {
-
-		mappings, err := getMappers()
-		if err != nil {
-			log.Println(err)
-		}
-
-		for key, mapping := range mappings {
-			modified := false
-			if _, ok := index[key]; ok {
-				if index[key].Ip != mapping.Ip || index[key].Port != mapping.Port {
-					modified = true
-				}
-			} else {
-				modified = true
-			}
-			if modified {
-				log.Println("updating: " + key)
-				if err := writeSiteConfig(mapping, *outputPath, *tplPath); err != nil {
-					log.Println(err)
-				}
-			}
-			index[key] = mapping
+		if err := synchronize(index, *outputPath, *tplPath); err != nil {
+			log.Fatal(err)
+			return
 		}
 
 		time.Sleep(5 * 1000 * time.Millisecond)
 	}
-	// mapping := &Mapping{Host: "foo.local", Ip: "172.20.20.10", Port: "8080"}
 
-	// if err := writeSiteConfig(mapping, *outputPath); err != nil {
-	// 	panic(err)
-	// }
 }
 
 // KUBERNETES_RO_PORT=tcp://11.1.1.210:80
