@@ -37,8 +37,7 @@
 				}
 			},
 			"labels": {
-				"name": "nginx",
-				"uses": "demo"
+				"name": "nginx"
 			}
 		}
 	},

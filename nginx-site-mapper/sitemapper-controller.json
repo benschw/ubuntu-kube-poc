@@ -29,8 +29,7 @@
 				}
 			},
 			"labels": {
-				"name": "sitemapper",
-				"uses": "demo"
+				"name": "sitemapper"
 			}
 		}
 	},
